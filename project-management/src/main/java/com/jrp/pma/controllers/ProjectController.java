@@ -14,22 +14,25 @@ import com.jrp.pma.dao.EmployeeRepository;
 import com.jrp.pma.dao.ProjectRepository;
 import com.jrp.pma.entities.Employee;
 import com.jrp.pma.entities.Project;
+import com.jrp.pma.services.EmployeeService;
+import com.jrp.pma.services.ProjectService;
 
 @Controller
 @RequestMapping("/projects")
 public class ProjectController {
+
 	
 	@Autowired
-	ProjectRepository proRepo;
+	EmployeeService empService;
 	
 	@Autowired
-	EmployeeRepository empRepo;
+	ProjectService proService;
 	
 	@GetMapping("/new")
-	public String dispalyProjectForm(Model model) {
+	public String displayProjectForm(Model model) {
 		
 		Project aProject = new Project();
-		List<Employee> employees = empRepo.findAll();
+		List<Employee> employees = empService.getAll();
 		model.addAttribute("project", aProject);
 		model.addAttribute("allEmployees", employees);
 		return "projects/new-project";
@@ -37,7 +40,7 @@ public class ProjectController {
 	
 	@PostMapping("/save")
 	public String createProject(Project project, Model model) {
-		proRepo.save(project);
+		proService.save(project);
 		
 		// use a redirect to prevent duplicate submissions
 		return "redirect:/projects";
@@ -45,7 +48,7 @@ public class ProjectController {
 	
 	@GetMapping
 	public String displayProject(Model model) {
-		List<Project> projects = proRepo.findAll();
+		List<Project> projects = proService.getAll();
 		model.addAttribute("projects", projects);
 		
 		// use a redirect to prevent duplicate submissions

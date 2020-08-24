@@ -12,17 +12,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.jrp.pma.dao.EmployeeRepository;
 import com.jrp.pma.entities.Employee;
 import com.jrp.pma.entities.Project;
+import com.jrp.pma.services.EmployeeService;
 
 @Controller
 @RequestMapping("/employees")
 public class EmployeeController {
 
+	
 	@Autowired
-	EmployeeRepository empRepo;
+	EmployeeService empService;
 	
 	@GetMapping("/new")
-	public String dispalyEmployeeForm(Model model) {
-		
+	public String displayEmployeeForm(Model model) {
 		Employee anEmployee = new Employee();
 		model.addAttribute("employee", anEmployee);
 		return "employees/new-employee";
@@ -30,15 +31,15 @@ public class EmployeeController {
 	
 	@PostMapping("/save")
 	public String createEmployee(Employee employee, Model model) {
-		empRepo.save(employee);
+		empService.save(employee);
 		
 		// use a redirect to prevent duplicate submissions
 		return "redirect:/employees/new";
 	}
 	
 	@GetMapping
-	public String displayProject(Model model) {
-		List<Employee> employees = empRepo.findAll();
+	public String displayEmployees(Model model) {
+		List<Employee> employees = empService.getAll();
 		model.addAttribute("employees", employees);
 		
 		// use a redirect to prevent duplicate submissions
